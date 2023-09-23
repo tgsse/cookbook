@@ -2,9 +2,9 @@ package com.ix.cookbook.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Restaurant
+import androidx.compose.material.icons.outlined.SentimentVerySatisfied
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ix.cookbook.R
 
@@ -16,7 +16,7 @@ sealed class Screen(
     object Recipes : Screen(
         route = "recipes",
         label = R.string.screen_recipes,
-        icon = Icons.Outlined.List,
+        icon = Icons.Outlined.Restaurant,
     )
 
     object FavoriteRecipes : Screen(
@@ -28,6 +28,6 @@ sealed class Screen(
     object FoodJoke : Screen(
         route = "foodJoke",
         label = R.string.screen_food_joke,
-        icon = Icons.Outlined.Face,
+        icon = Icons.Outlined.SentimentVerySatisfied,
     )
 }
