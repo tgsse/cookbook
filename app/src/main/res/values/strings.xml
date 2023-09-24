@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Cookbook</string>
+
     <string name="screen_recipes">Recipes</string>
     <string name="screen_favorite_recipes">My Favorites</string>
     <string name="screen_food_joke">Joke</string>
+
+    <string name="content_desc_recipes_screen">Recipes screen</string>
+    <string name="content_desc_food_joke_screen">Food joke screen</string>
+    <string name="content_desc_recipes_tab">recipes tab</string>
+    <string name="content_desc_favorite_recipes_tab">favorite recipes tab</string>
+    <string name="content_desc_food_joke_tab">food joke tab</string>
 </resources>

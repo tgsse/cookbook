@@ -12,7 +12,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 
-private val routes = listOf(
+val routes = listOf(
     Screen.Recipes,
     Screen.FavoriteRecipes,
     Screen.FoodJoke,
