@@ -26,7 +26,7 @@ fun FavoriteRecipesScreen() {
                 contentDescription =
                     context.getString(R.string.content_desc_food_joke_screen)
             },
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column {
             Text(stringResource(R.string.screen_favorite_recipes))

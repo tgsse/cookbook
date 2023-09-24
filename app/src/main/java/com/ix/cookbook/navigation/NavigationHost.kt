@@ -20,12 +20,12 @@ fun NavigationHost(
     Scaffold(
         bottomBar = {
             NavBar(navController)
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController,
             startDestination = Screen.Recipes.route,
-            Modifier.padding(innerPadding)
+            Modifier.padding(innerPadding),
         ) {
             composable(Screen.Recipes.route) { RecipesScreen() }
             composable(Screen.FavoriteRecipes.route) { FavoriteRecipesScreen() }

@@ -28,7 +28,7 @@ fun NavBar(navController: NavController) {
                 icon = {
                     Icon(
                         screen.icon,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 },
                 label = { Text(stringResource(screen.label)) },
@@ -47,7 +47,7 @@ fun NavBar(navController: NavController) {
                         // Restore state when reselecting a previously selected item
                         restoreState = true
                     }
-                }
+                },
             )
         }
     }
