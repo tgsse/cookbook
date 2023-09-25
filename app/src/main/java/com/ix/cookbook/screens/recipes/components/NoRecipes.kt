@@ -42,7 +42,7 @@ fun NoRecipes() {
 
 @Preview
 @Composable
-fun NoRecipesPreview() {
+private fun NoRecipesPreview() {
     CookbookTheme {
         NoRecipes()
     }

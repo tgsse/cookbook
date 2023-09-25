@@ -24,7 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.ix.cookbook.R
 import com.ix.cookbook.screens.joke.FoodJokeScreen
-import com.ix.cookbook.screens.recipes.components.NoRecipes
+import com.ix.cookbook.screens.recipes.components.RecipeList
 import com.ix.cookbook.ui.theme.CookbookTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +62,8 @@ fun RecipesScreen() {
                     text = stringResource(R.string.screen_recipes),
                 )
 
-                NoRecipes()
+//                NoRecipes()
+                RecipeList()
             }
         }
     }

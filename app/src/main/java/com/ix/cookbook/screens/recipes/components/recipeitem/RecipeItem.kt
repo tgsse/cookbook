@@ -27,7 +27,8 @@ import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing
 
-val gradientColors = listOf(Color.Black, Colors.gray)
+private val gradientColors = listOf(Color.Black, Colors.gray)
+val cardHeight = 180.dp
 
 @Composable
 fun RecipeItem() {
@@ -36,7 +37,7 @@ fun RecipeItem() {
             contentColor = MaterialTheme.typography.bodySmall.color,
         ),
         modifier = Modifier
-            .height(220.dp),
+            .height(cardHeight),
     ) {
         Row {
             Image(
@@ -61,7 +62,7 @@ fun RecipeItem() {
                 RecipeAttributes()
                 Text(
                     text = "Bonbon chocolate cake jelly-o toffee oat cake. Pudding sweet soufflé cupcake oat cake candy canes. Chocolate bear claw chocolate bar toffee muffin pudding biscuit liquorice. Bear claw macaroon pastry sugar plum ice cream macaroon cake jelly sweet. Sweet chocolate bar shortbread chocolate muffin. Brownie chocolate bar cupcake chupa chups cupcake cookie. Jelly icing danish macaroon chupa chups lemon drops dragée sesame snaps jujubes.",
-                    maxLines = 4,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         brush = Brush.verticalGradient(
@@ -76,8 +77,16 @@ fun RecipeItem() {
 
 @Preview(widthDp = 420)
 @Composable
-fun RecipeItemPreview() {
+private fun RecipeItemPreview() {
     CookbookTheme {
         RecipeItem()
+    }
+}
+
+@Preview(widthDp = 420)
+@Composable
+private fun RecipeItemPlaceholderPreview() {
+    CookbookTheme {
+        RecipeItemPlaceholder()
     }
 }
