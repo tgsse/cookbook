@@ -2,7 +2,8 @@ package com.ix.cookbook.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-object CookbookColors {
+@Suppress("ktlint:filename")
+object Colors {
     val purple = Color(0xFF6200EA)
     val deepPurple = Color(0xFF5502C8)
     val lightPurple = Color(0xFF9D46FF)
@@ -19,4 +20,3 @@ object CookbookColors {
     val green = Color(0xFF4C7B35)
     val gray = Color(0xFF36454F)
 }
-
