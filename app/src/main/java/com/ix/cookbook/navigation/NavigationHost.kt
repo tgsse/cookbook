@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ix.cookbook.screens.FavoriteRecipesScreen
-import com.ix.cookbook.screens.FoodJokeScreen
-import com.ix.cookbook.screens.RecipesScreen
+import com.ix.cookbook.screens.favorites.FavoriteRecipesScreen
+import com.ix.cookbook.screens.joke.FoodJokeScreen
+import com.ix.cookbook.screens.recipes.RecipesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

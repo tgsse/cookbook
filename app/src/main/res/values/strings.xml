@@ -10,4 +10,5 @@
     <string name="content_desc_recipes_tab">recipes tab</string>
     <string name="content_desc_favorite_recipes_tab">favorite recipes tab</string>
     <string name="content_desc_food_joke_tab">food joke tab</string>
+    <string name="error_recipes_not_found">Could not find any recipes. Please try later.</string>
 </resources>

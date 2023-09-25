@@ -1,4 +1,4 @@
-package com.ix.cookbook.screens
+package com.ix.cookbook.screens.favorites
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.ix.cookbook.R
-import com.ix.cookbook.ui.theme.CookBookTheme
+import com.ix.cookbook.ui.theme.CookbookTheme
 
 @Composable
 fun FavoriteRecipesScreen() {
@@ -37,7 +37,7 @@ fun FavoriteRecipesScreen() {
 @Preview
 @Composable
 fun FavoriteRecipesPreview() {
-    CookBookTheme {
+    CookbookTheme {
         FavoriteRecipesScreen()
     }
 }
