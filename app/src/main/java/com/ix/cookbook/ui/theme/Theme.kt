@@ -16,15 +16,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val darkColorScheme = darkColorScheme(
-    primary = purple,
-    secondary = deepPurple,
-    tertiary = lightPurple,
+    primary = CookbookColors.purple,
+    secondary = CookbookColors.deepPurple,
+    tertiary = CookbookColors.lightPurple,
 )
 
 private val lightColorScheme = lightColorScheme(
-    primary = purple,
-    secondary = deepPurple,
-    tertiary = lightPurple,
+    primary = CookbookColors.purple,
+    secondary = CookbookColors.deepPurple,
+    tertiary = CookbookColors.lightPurple,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
