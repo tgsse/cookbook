@@ -1,9 +1,18 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 
     id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
 }
+
+val prop = Properties().apply {
+    load(FileInputStream(File(rootProject.rootDir, "apiKeys.properties")))
+}
+val apiKey: String = prop.getProperty("API_KEY") ?: ""
+val baseUrl: String = prop.getProperty("BASE_URL") ?: ""
 
 android {
     namespace = "com.ix.cookbook"
@@ -30,6 +39,10 @@ android {
                 "proguard-rules.pro",
             )
         }
+        debug {
+            buildConfigField("String", "apiKey", "\"$apiKey\"")
+            buildConfigField("String", "baseUrl", "\"$baseUrl\"")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -40,6 +53,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -78,6 +92,12 @@ dependencies {
 
     // Shimmer
     implementation("com.valentinilk.shimmer:compose-shimmer:1.0.5")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
