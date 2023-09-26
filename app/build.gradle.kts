@@ -6,7 +6,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
+
     kotlin("plugin.serialization") version "1.8.10"
+
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 val prop = Properties().apply {
@@ -46,11 +50,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -94,11 +98,16 @@ dependencies {
     // Shimmer
     implementation("com.valentinilk.shimmer:compose-shimmer:1.0.5")
 
-    // Retrofit
+    // Network
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+
+    // Dependency Injection
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
@@ -106,4 +115,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
