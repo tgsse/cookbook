@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
+    kotlin("plugin.serialization") version "1.8.10"
 }
 
 val prop = Properties().apply {
