@@ -95,6 +95,10 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     androidTestImplementation("androidx.navigation:navigation-testing:$navVersion")
 
+    // Image loading
+    implementation("io.coil-kt:coil:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // Shimmer
     implementation("com.valentinilk.shimmer:compose-shimmer:1.0.5")
 
