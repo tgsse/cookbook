@@ -11,6 +11,7 @@ plugins {
 
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 val prop = Properties().apply {
@@ -73,6 +74,7 @@ android {
 dependencies {
 
     val navVersion = "2.7.3"
+    val roomVersion = "2.5.2"
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -94,6 +96,13 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     androidTestImplementation("androidx.navigation:navigation-testing:$navVersion")
+
+    // Room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     // Image loading
     implementation("io.coil-kt:coil:2.4.0")

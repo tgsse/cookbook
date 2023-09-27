@@ -3,7 +3,7 @@ package com.ix.cookbook.data.util
 import com.ix.cookbook.BuildConfig
 
 data class RecipesQuery(
-    val number: Int = 1,
+    val number: Int = 10,
     val apiKey: String = BuildConfig.apiKey,
     val type: String? = null,
     val diet: String? = null,

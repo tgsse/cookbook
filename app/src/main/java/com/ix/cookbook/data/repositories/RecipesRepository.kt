@@ -1,5 +1,6 @@
 package com.ix.cookbook.data.repositories
 
+import com.ix.cookbook.data.datasources.RecipesLocalDataSource
 import com.ix.cookbook.data.datasources.RecipesRemoteDataSource
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
@@ -7,8 +8,9 @@ import javax.inject.Inject
 @ViewModelScoped
 class RecipesRepository @Inject constructor(
     remoteDataSource: RecipesRemoteDataSource,
-//    localDataSource: RecipesLocalDataSource,
+    localDataSource: RecipesLocalDataSource,
 ) {
 
     val remote = remoteDataSource
+    val local = localDataSource
 }

@@ -5,13 +5,16 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ix.cookbook.R
+import com.ix.cookbook.data.databases.RecipesEntity
 import com.ix.cookbook.data.models.Recipes
 import com.ix.cookbook.data.repositories.RecipesRepository
 import com.ix.cookbook.data.util.RecipesQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,8 +33,7 @@ sealed class RecipesEvent {
 class RecipesViewModel @Inject constructor(
     private val repository: RecipesRepository,
     application: Application,
-) :
-    AndroidViewModel(application = application) {
+) : AndroidViewModel(application = application) {
 
     private val _state = MutableStateFlow(RecipesState())
     val state = _state.asStateFlow()
@@ -46,21 +48,45 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun init() {
-        getRecipes()
+        loadRecipesFromCache()
     }
 
-    private fun getRecipes() {
-        val queryMap = RecipesQuery().toQueryMap()
+    private fun cacheRecipes(recipes: Recipes) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.insertRecipes(RecipesEntity(recipes))
+        }
+
+    private fun loadRecipesFromCache() {
+        viewModelScope.launch {
+            val recipes = repository.local.readRecipes().firstOrNull()
+            recipes?.let { value ->
+                if (value.isNotEmpty()) {
+                    // TODO: hardcoded access to first result
+                    _state.update { uiState -> uiState.copy(recipes = value[0].recipes) }
+                } else {
+                    fetchRecipesFromRemote()
+                }
+            }
+        }
+    }
+
+    private fun fetchRecipesFromRemote() {
+        val queryMap = RecipesQuery(
+            number = 1,
+            type = "snack",
+            diet = "vegan",
+            addRecipeInformation = true,
+            fillIngredients = true,
+        ).toQueryMap()
+
         viewModelScope.launch {
             try {
                 _state.update { uiState -> uiState.copy(isLoading = true) }
                 val recipes = repository.remote.getRecipes(queries = queryMap)
                 _state.update { uiState -> uiState.copy(recipes = recipes) }
-                uiEventChannel.send(
-                    element = UiEvent.ShowMessage(
-                        message = "Loaded some recipes.",
-                    ),
-                )
+                if (recipes.items.isNotEmpty()) {
+                    cacheRecipes(recipes)
+                }
             } catch (e: Exception) {
                 showError(e)
             } finally {
