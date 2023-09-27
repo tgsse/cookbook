@@ -130,9 +130,3 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
-
-ktlint {
-    filter {
-        exclude("**/example/**")
-    }
-}

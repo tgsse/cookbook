@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ix.cookbook.R
 import com.ix.cookbook.data.models.Recipes
 import com.ix.cookbook.data.repositories.RecipesRepository
-import com.ix.cookbook.util.Constants
+import com.ix.cookbook.data.util.RecipesQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,10 +50,11 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun getRecipes() {
+        val queryMap = RecipesQuery().toQueryMap()
         viewModelScope.launch {
             try {
                 _state.update { uiState -> uiState.copy(isLoading = true) }
-                val recipes = repository.remote.getRecipes(applyQueries())
+                val recipes = repository.remote.getRecipes(queries = queryMap)
                 _state.update { uiState -> uiState.copy(recipes = recipes) }
                 uiEventChannel.send(
                     element = UiEvent.ShowMessage(
@@ -66,19 +67,6 @@ class RecipesViewModel @Inject constructor(
                 _state.update { uiState -> uiState.copy(isLoading = false) }
             }
         }
-    }
-
-    private fun applyQueries(): HashMap<String, String> {
-        val queries = HashMap<String, String>()
-        with(queries) {
-            put("number", "3")
-            put("apiKey", Constants.apiKey)
-            put("type", "snack")
-            put("diet", "vegan")
-            put("addRecipeInformation", "true")
-            put("fillIngredients", "true")
-        }
-        return queries
     }
 
     private fun showError(e: Exception) {
