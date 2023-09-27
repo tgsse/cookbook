@@ -1,19 +1,30 @@
 package com.ix.cookbook.screens.recipes
 
 import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.ix.cookbook.R
 import com.ix.cookbook.data.models.Recipes
 import com.ix.cookbook.data.repositories.RecipesRepository
-import com.ix.cookbook.data.util.NetworkResult
+import com.ix.cookbook.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
+
+data class RecipesState(
+    val isLoading: Boolean = false,
+    val recipes: Recipes = Recipes(),
+)
+
+sealed class RecipesEvent {
+    object Init : RecipesEvent()
+}
 
 @HiltViewModel
 class RecipesViewModel @Inject constructor(
@@ -22,61 +33,68 @@ class RecipesViewModel @Inject constructor(
 ) :
     AndroidViewModel(application = application) {
 
-    var recipesResponse: MutableLiveData<NetworkResult<Recipes>> = MutableLiveData()
+    private val _state = MutableStateFlow(RecipesState())
+    val state = _state.asStateFlow()
 
-    fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
-        getRecipesSafeCall(queries)
+    private val uiEventChannel = Channel<UiEvent>()
+    val uiEvents = uiEventChannel.receiveAsFlow()
+
+    fun onEvent(event: RecipesEvent) {
+        when (event) {
+            is RecipesEvent.Init -> init()
+        }
     }
 
-    private suspend fun getRecipesSafeCall(queries: Map<String, String>) {
-        recipesResponse.value = NetworkResult.Loading()
-        if (hasInternetConnection()) {
+    private fun init() {
+        getRecipes()
+    }
+
+    private fun getRecipes() {
+        viewModelScope.launch {
             try {
-                val response = repository.remote.getRecipes(queries)
-                recipesResponse.value = handleGetRecipesResponse(response)
+                _state.update { uiState -> uiState.copy(isLoading = true) }
+                val recipes = repository.remote.getRecipes(applyQueries())
+                _state.update { uiState -> uiState.copy(recipes = recipes) }
+                uiEventChannel.send(
+                    element = UiEvent.ShowMessage(
+                        message = "Loaded some recipes.",
+                    ),
+                )
             } catch (e: Exception) {
-                recipesResponse.value = NetworkResult.Error(e.message)
+                showError(e)
+            } finally {
+                _state.update { uiState -> uiState.copy(isLoading = false) }
             }
-        } else {
-            recipesResponse.value = NetworkResult.Error("No internet connection.")
         }
     }
 
-    private fun handleGetRecipesResponse(response: Response<Recipes>): NetworkResult<Recipes> {
-        when {
-            response.message().toString().contains("timeout") -> {
-                return NetworkResult.Error("Timeout")
-            }
+    private fun applyQueries(): HashMap<String, String> {
+        val queries = HashMap<String, String>()
+        with(queries) {
+            put("number", "3")
+            put("apiKey", Constants.apiKey)
+            put("type", "snack")
+            put("diet", "vegan")
+            put("addRecipeInformation", "true")
+            put("fillIngredients", "true")
+        }
+        return queries
+    }
 
-            response.code() == 402 -> {
-                return NetworkResult.Error("API Key Limited")
-            }
-
-            response.body()?.items.isNullOrEmpty() -> {
-                return NetworkResult.Error("Recipes not found")
-            }
-
-            response.isSuccessful -> {
-                val result = response.body()
-                return NetworkResult.Success(result!!)
-            }
-
-            else -> return NetworkResult.Error(response.message())
+    private fun showError(e: Exception) {
+        Log.e(this.javaClass.toString(), e.toString())
+        viewModelScope.launch {
+            uiEventChannel.send(
+                element = UiEvent.ShowMessage(
+                    message = e.message
+                        ?: getApplication<Application>().resources.getString(R.string.error_default),
+                ),
+            )
         }
     }
 
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = getApplication<Application>().getSystemService(
-            Context.CONNECTIVITY_SERVICE,
-        ) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities =
-            connectivityManager.getNetworkCapabilities((activeNetwork)) ?: return false
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
+    sealed class UiEvent {
+        data class ShowMessage(val message: String) : UiEvent()
+//        data class NavigateToDetail(val recipe: Recipe) : UiEvent()
     }
 }

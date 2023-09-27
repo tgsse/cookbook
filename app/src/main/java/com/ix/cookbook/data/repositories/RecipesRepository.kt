@@ -1,10 +1,10 @@
 package com.ix.cookbook.data.repositories
 
 import com.ix.cookbook.data.datasources.RecipesRemoteDataSource
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ActivityRetainedScoped
+@ViewModelScoped
 class RecipesRepository @Inject constructor(
     remoteDataSource: RecipesRemoteDataSource,
 //    localDataSource: RecipesLocalDataSource,

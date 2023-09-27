@@ -46,8 +46,8 @@ val Typography = Typography(
     titleMedium = TextStyle(
         fontFamily = Fonts.title,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 28.sp,
-        lineHeight = 36.sp,
+        fontSize = 22.sp,
+        lineHeight = 26.sp,
 //        letterSpacing = 0.15.sp,
     ),
     /* Other default text styles to override

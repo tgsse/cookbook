@@ -3,6 +3,23 @@ package com.ix.cookbook.data.models
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+val dummyRecipe = Recipe(
+    aggregateLikes = 124,
+    cheap = true,
+    dairyFree = false,
+    extendedIngredients = emptyList(),
+    glutenFree = false,
+    id = 0,
+    image = "",
+    readyInMinutes = 45,
+    sourceName = "source name",
+    sourceUrl = "source url",
+    summary = "Marzipan gummi bears carrot cake pie dragée lemon drops tart tiramisu. Chupa chups cotton candy cookie icing bear claw. Icing toffee chupa chups croissant bonbon cheesecake. Chocolate gummi bears topping lemon drops marzipan halvah oat cake.",
+    title = "Recipe Title",
+    vegan = true,
+    veryHealthy = false,
+)
+
 @Serializable
 data class Recipe(
     @SerialName("aggregateLikes")

@@ -17,7 +17,11 @@ import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.spacing
 
 @Composable
-fun RecipeAttributes() {
+fun RecipeAttributes(
+    likes: Int,
+    readyInMinutes: Int,
+    vegan: Boolean,
+) {
     Row(
         modifier = Modifier
             .padding(bottom = MaterialTheme.spacing.s),
@@ -33,7 +37,7 @@ fun RecipeAttributes() {
                 tint = Colors.red,
             )
             Text(
-                text = "124",
+                text = likes.toString(),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = Colors.red,
                 ),
@@ -50,16 +54,18 @@ fun RecipeAttributes() {
                 tint = Colors.yellow,
             )
             Text(
-                text = "45",
+                text = readyInMinutes.toString(),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = Colors.yellow,
                 ),
             )
         }
-        Icon(
-            imageVector = Icons.Filled.Eco,
-            contentDescription = null,
-            tint = Colors.green,
-        )
+        if (vegan) {
+            Icon(
+                imageVector = Icons.Filled.Eco,
+                contentDescription = null,
+                tint = Colors.green,
+            )
+        }
     }
 }

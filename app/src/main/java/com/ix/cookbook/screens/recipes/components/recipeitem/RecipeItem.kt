@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ix.cookbook.R
+import com.ix.cookbook.data.models.Recipe
+import com.ix.cookbook.data.models.dummyRecipe
 import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing
@@ -31,7 +33,7 @@ private val gradientColors = listOf(Color.Black, Colors.gray)
 val cardHeight = 180.dp
 
 @Composable
-fun RecipeItem() {
+fun RecipeItem(recipe: Recipe) {
     Card(
         colors = CardDefaults.cardColors(
             contentColor = MaterialTheme.typography.bodySmall.color,
@@ -54,14 +56,19 @@ fun RecipeItem() {
                     .padding(MaterialTheme.spacing.s),
             ) {
                 Text(
-                    text = "Recipe Title",
+                    text = recipe.title,
                     maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.s))
-                RecipeAttributes()
+                RecipeAttributes(
+                    likes = recipe.aggregateLikes,
+                    readyInMinutes = recipe.readyInMinutes,
+                    vegan = recipe.vegan,
+                )
                 Text(
-                    text = "Bonbon chocolate cake jelly-o toffee oat cake. Pudding sweet soufflé cupcake oat cake candy canes. Chocolate bear claw chocolate bar toffee muffin pudding biscuit liquorice. Bear claw macaroon pastry sugar plum ice cream macaroon cake jelly sweet. Sweet chocolate bar shortbread chocolate muffin. Brownie chocolate bar cupcake chupa chups cupcake cookie. Jelly icing danish macaroon chupa chups lemon drops dragée sesame snaps jujubes.",
+                    text = recipe.summary,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -79,7 +86,7 @@ fun RecipeItem() {
 @Composable
 private fun RecipeItemPreview() {
     CookbookTheme {
-        RecipeItem()
+        RecipeItem(dummyRecipe)
     }
 }
 

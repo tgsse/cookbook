@@ -10,7 +10,7 @@ data class Recipes(
 //    @SerialName("offset")
 //    val offset: Int,
     @SerialName("results")
-    val items: List<Recipe>,
+    val items: List<Recipe> = emptyList(),
 //    @SerialName("totalResults")
 //    val totalResults: Int
 )
