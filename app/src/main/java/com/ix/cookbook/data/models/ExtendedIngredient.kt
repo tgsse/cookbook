@@ -14,7 +14,7 @@ data class ExtendedIngredient(
 //    @SerialName("id")
 //    val id: Int,
     @SerialName("image")
-    val image: String,
+    val image: String?,
 //    @SerialName("measures")
 //    val measures: Measures,
 //    @SerialName("meta")

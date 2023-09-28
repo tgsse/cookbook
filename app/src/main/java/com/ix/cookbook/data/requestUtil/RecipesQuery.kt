@@ -1,4 +1,4 @@
-package com.ix.cookbook.data.util
+package com.ix.cookbook.data.requestUtil
 
 import com.ix.cookbook.BuildConfig
 

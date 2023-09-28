@@ -37,6 +37,7 @@ object NetworkModule {
     fun provideJsonConverter(): Converter.Factory {
         val json = Json {
             ignoreUnknownKeys = true
+            coerceInputValues = true
         }
         return json.asConverterFactory("application/json".toMediaType())
     }

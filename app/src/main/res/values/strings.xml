@@ -12,4 +12,5 @@
     <string name="content_desc_food_joke_tab">food joke tab</string>
     <string name="error_recipes_not_found">Could not find any recipes. Please try later.</string>
     <string name="error_default">An error occurred. Please try again later.</string>
+    <string name="content_desc_checked">checked</string>
 </resources>

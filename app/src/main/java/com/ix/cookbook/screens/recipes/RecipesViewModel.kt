@@ -8,7 +8,9 @@ import com.ix.cookbook.R
 import com.ix.cookbook.data.databases.RecipesEntity
 import com.ix.cookbook.data.models.Recipes
 import com.ix.cookbook.data.repositories.RecipesRepository
-import com.ix.cookbook.data.util.RecipesQuery
+import com.ix.cookbook.data.requestUtil.RecipesQuery
+import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
+import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -23,10 +25,16 @@ import javax.inject.Inject
 data class RecipesState(
     val isLoading: Boolean = false,
     val recipes: Recipes = Recipes(),
+    var selectedMealFilter: MealTypeFilter? = null,
+    var selectedDietFilter: DietTypeFilter? = null,
 )
 
 sealed class RecipesEvent {
     object Init : RecipesEvent()
+    data class Filter(
+        val mealFilter: MealTypeFilter? = null,
+        val dietFilter: DietTypeFilter? = null,
+    ) : RecipesEvent()
 }
 
 @HiltViewModel
@@ -44,11 +52,26 @@ class RecipesViewModel @Inject constructor(
     fun onEvent(event: RecipesEvent) {
         when (event) {
             is RecipesEvent.Init -> init()
+            is RecipesEvent.Filter -> applyFilters(event.mealFilter, event.dietFilter)
         }
     }
 
     private fun init() {
         loadRecipesFromCache()
+//        fetchRecipesFromRemote()
+    }
+
+    private fun applyFilters(mealType: MealTypeFilter?, dietType: DietTypeFilter?) {
+        if (mealType == state.value.selectedMealFilter && dietType == state.value.selectedDietFilter) {
+            return
+        }
+        _state.update { uiState ->
+            uiState.copy(
+                selectedMealFilter = mealType,
+                selectedDietFilter = dietType,
+            )
+        }
+        fetchRecipesFromRemote()
     }
 
     private fun cacheRecipes(recipes: Recipes) =
@@ -70,15 +93,18 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-    private fun fetchRecipesFromRemote() {
-        val queryMap = RecipesQuery(
+    private fun buildQueryMap(): HashMap<String, String> {
+        return RecipesQuery(
             number = 1,
-            type = "snack",
-            diet = "vegan",
+            type = state.value.selectedMealFilter?.id,
+            diet = state.value.selectedDietFilter?.id,
             addRecipeInformation = true,
             fillIngredients = true,
         ).toQueryMap()
+    }
 
+    private fun fetchRecipesFromRemote() {
+        val queryMap = buildQueryMap()
         viewModelScope.launch {
             try {
                 _state.update { uiState -> uiState.copy(isLoading = true) }
@@ -112,3 +138,34 @@ class RecipesViewModel @Inject constructor(
 //        data class NavigateToDetail(val recipe: Recipe) : UiEvent()
     }
 }
+
+val defaultMealTypeFilters = listOf(
+    MealTypeFilter("Breakfast", "breakfast"),
+    MealTypeFilter("Appetizer", "appetizer"),
+    MealTypeFilter("Soup", "soup"),
+    MealTypeFilter("Main", "main course"),
+    MealTypeFilter("Dessert", "dessert"),
+    MealTypeFilter("Snack", "snack"),
+    MealTypeFilter("Side", "side dish"),
+    MealTypeFilter("Salad", "salad"),
+    MealTypeFilter("Bread", "bread"),
+    MealTypeFilter("Sauce", "sauce"),
+    MealTypeFilter("Marinade", "marinade"),
+    MealTypeFilter("Fingerfood", "fingerfood"),
+    MealTypeFilter("Beverage", "beverage"),
+    MealTypeFilter("Drink", "drink"),
+)
+
+val defaultDietTypeFilters = listOf(
+    DietTypeFilter("Gluten Free", "gluten free"),
+    DietTypeFilter("Keto", "ketogenic"),
+    DietTypeFilter("Vegetarian", "vegetarian"),
+    DietTypeFilter("Lacto-vegetarian", "lacto-vegetarian"),
+    DietTypeFilter("Ovo-vegetarian", "ovo-vegetarian"),
+    DietTypeFilter("vegan", "vegan"),
+    DietTypeFilter("Pescetarian", "pescetarian"),
+    DietTypeFilter("Paleo", "paleo"),
+    DietTypeFilter("Primal", "primal"),
+    DietTypeFilter("Low FODMAP", "low fodmap"),
+    DietTypeFilter("Whole30", "whole30"),
+)
