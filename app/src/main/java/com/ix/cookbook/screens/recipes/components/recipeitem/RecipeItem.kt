@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.RestaurantMenu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,12 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ix.cookbook.R
 import com.ix.cookbook.data.models.Recipe
 import com.ix.cookbook.data.models.dummyRecipe
 import com.ix.cookbook.ui.theme.Colors
@@ -48,7 +47,7 @@ fun RecipeItem(recipe: Recipe) {
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center,
-                error = rememberVectorPainter(Icons.Outlined.RestaurantMenu), // TODO: need a proper image here
+                error = painterResource(id = R.drawable.image_placeholder),
                 modifier = Modifier
                     .width(160.dp)
                     .fillMaxHeight(),
