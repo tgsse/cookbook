@@ -56,11 +56,15 @@ class DataStoreRepository @Inject constructor(
         .map { prefs ->
             val mealType = if (!prefs[Keys.selectedMealType].isNullOrBlank()) {
                 defaultMealTypeFilters.find { it.id == prefs[Keys.selectedMealType] }
-            } else null
+            } else {
+                null
+            }
 
             val dietType = if (!prefs[Keys.selectedDietType].isNullOrBlank()) {
                 defaultDietTypeFilters.find { it.id == prefs[Keys.selectedDietType] }
-            } else null
+            } else {
+                null
+            }
 
             MealAndDietFilters(
                 selectedMealType = mealType,

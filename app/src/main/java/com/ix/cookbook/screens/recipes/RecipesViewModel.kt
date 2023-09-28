@@ -12,6 +12,7 @@ import com.ix.cookbook.data.repositories.RecipesRepository
 import com.ix.cookbook.data.requestUtil.RecipesQuery
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
+import com.ix.cookbook.util.NetworkListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class RecipesState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val recipes: Recipes = Recipes(),
     var selectedMealFilter: MealTypeFilter? = null,
     var selectedDietFilter: DietTypeFilter? = null,
@@ -51,6 +52,10 @@ class RecipesViewModel @Inject constructor(
     private val uiEventChannel = Channel<UiEvent>()
     val uiEvents = uiEventChannel.receiveAsFlow()
 
+    private val networkListener = NetworkListener()
+    private val networkState =
+        networkListener.register(context = getApplication<Application>().applicationContext)
+
     fun onEvent(event: RecipesEvent) {
         when (event) {
             is RecipesEvent.Init -> init()
@@ -59,17 +64,24 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun init() {
+        loadFiltersFromDataStore()
         loadRecipesFromCache()
-//        fetchRecipesFromRemote()
+        viewModelScope.launch {
+            networkState.collect { value ->
+                Log.d("viewmodel", "is connected: $value")
+            }
+        }
     }
 
-    private suspend fun loadFiltersFromDataStore() {
-        dataStoreRepository.readMealAndDietFilter.collect { value ->
-            _state.update { uiState ->
-                uiState.copy(
-                    selectedMealFilter = value.selectedMealType,
-                    selectedDietFilter = value.selectedDietType,
-                )
+    private fun loadFiltersFromDataStore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.readMealAndDietFilter.collect { value ->
+                _state.update { uiState ->
+                    uiState.copy(
+                        selectedMealFilter = value.selectedMealType,
+                        selectedDietFilter = value.selectedDietType,
+                    )
+                }
             }
         }
     }
@@ -95,14 +107,21 @@ class RecipesViewModel @Inject constructor(
             repository.local.insertRecipes(RecipesEntity(recipes))
         }
 
-    private suspend fun loadRecipesFromCache() {
-        val recipes = repository.local.readRecipes().firstOrNull()
-        recipes?.let { value ->
-            if (value.isNotEmpty()) {
-                // TODO: hardcoded access to first result
-                _state.update { uiState -> uiState.copy(recipes = value[0].recipes) }
-            } else {
-                fetchRecipesFromRemote()
+    private fun loadRecipesFromCache() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val recipes = repository.local.readRecipes().firstOrNull()
+            recipes?.let { value ->
+                if (value.isNotEmpty()) {
+                    // TODO: hardcoded access to first result
+                    _state.update { uiState ->
+                        uiState.copy(
+                            recipes = value[0].recipes,
+                            isLoading = false,
+                        )
+                    }
+                } else {
+                    fetchRecipesFromRemote()
+                }
             }
         }
     }
