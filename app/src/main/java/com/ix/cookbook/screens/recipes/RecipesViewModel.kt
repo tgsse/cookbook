@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ix.cookbook.R
 import com.ix.cookbook.data.databases.RecipesEntity
 import com.ix.cookbook.data.models.Recipes
+import com.ix.cookbook.data.repositories.DataStoreRepository
 import com.ix.cookbook.data.repositories.RecipesRepository
 import com.ix.cookbook.data.requestUtil.RecipesQuery
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
@@ -40,6 +41,7 @@ sealed class RecipesEvent {
 @HiltViewModel
 class RecipesViewModel @Inject constructor(
     private val repository: RecipesRepository,
+    private val dataStoreRepository: DataStoreRepository,
     application: Application,
 ) : AndroidViewModel(application = application) {
 
@@ -61,6 +63,17 @@ class RecipesViewModel @Inject constructor(
 //        fetchRecipesFromRemote()
     }
 
+    private suspend fun loadFiltersFromDataStore() {
+        dataStoreRepository.readMealAndDietFilter.collect { value ->
+            _state.update { uiState ->
+                uiState.copy(
+                    selectedMealFilter = value.selectedMealType,
+                    selectedDietFilter = value.selectedDietType,
+                )
+            }
+        }
+    }
+
     private fun applyFilters(mealType: MealTypeFilter?, dietType: DietTypeFilter?) {
         if (mealType == state.value.selectedMealFilter && dietType == state.value.selectedDietFilter) {
             return
@@ -71,7 +84,10 @@ class RecipesViewModel @Inject constructor(
                 selectedDietFilter = dietType,
             )
         }
-        fetchRecipesFromRemote()
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.saveMealAndDietFilter(mealType, dietType)
+            fetchRecipesFromRemote()
+        }
     }
 
     private fun cacheRecipes(recipes: Recipes) =
@@ -79,16 +95,14 @@ class RecipesViewModel @Inject constructor(
             repository.local.insertRecipes(RecipesEntity(recipes))
         }
 
-    private fun loadRecipesFromCache() {
-        viewModelScope.launch {
-            val recipes = repository.local.readRecipes().firstOrNull()
-            recipes?.let { value ->
-                if (value.isNotEmpty()) {
-                    // TODO: hardcoded access to first result
-                    _state.update { uiState -> uiState.copy(recipes = value[0].recipes) }
-                } else {
-                    fetchRecipesFromRemote()
-                }
+    private suspend fun loadRecipesFromCache() {
+        val recipes = repository.local.readRecipes().firstOrNull()
+        recipes?.let { value ->
+            if (value.isNotEmpty()) {
+                // TODO: hardcoded access to first result
+                _state.update { uiState -> uiState.copy(recipes = value[0].recipes) }
+            } else {
+                fetchRecipesFromRemote()
             }
         }
     }

@@ -104,6 +104,9 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:$roomVersion")
 
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     // Image loading
     implementation("io.coil-kt:coil:2.4.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
