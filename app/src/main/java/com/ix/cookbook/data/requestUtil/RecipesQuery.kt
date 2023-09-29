@@ -9,6 +9,7 @@ data class RecipesQuery(
     val diet: String? = null,
     val addRecipeInformation: Boolean = false,
     val fillIngredients: Boolean = false,
+    val searchQuery: String? = null,
 ) {
     fun toQueryMap(): HashMap<String, String> {
         val query = HashMap<String, String>()
@@ -17,6 +18,7 @@ data class RecipesQuery(
             put("apiKey", apiKey)
             type?.let { put("type", type) }
             diet?.let { put("diet", diet) }
+            searchQuery?.let { put("query", searchQuery) }
             put("addRecipeInformation", addRecipeInformation.toString())
             put("fillIngredients", fillIngredients.toString())
         }

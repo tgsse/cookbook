@@ -6,5 +6,7 @@ sealed class Constants {
     companion object {
         const val apiKey = BuildConfig.apiKey
         const val baseUrl = BuildConfig.baseUrl
+
+        const val maxSearchLength = 25
     }
 }

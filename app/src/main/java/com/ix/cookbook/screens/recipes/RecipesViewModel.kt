@@ -11,6 +11,7 @@ import com.ix.cookbook.data.repositories.DataStoreRepository
 import com.ix.cookbook.data.repositories.RecipesRepository
 import com.ix.cookbook.data.requestUtil.RecipesQuery
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
+import com.ix.cookbook.data.requestUtil.filters.Filter
 import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
 import com.ix.cookbook.util.NetworkListener
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,14 +30,21 @@ data class RecipesState(
     val recipes: Recipes = Recipes(),
     var selectedMealFilter: MealTypeFilter? = null,
     var selectedDietFilter: DietTypeFilter? = null,
+
+    var searchQuery: String? = null,
+    var searchHistory: List<String> = emptyList(),
 )
 
 sealed class RecipesEvent {
     object Init : RecipesEvent()
-    data class Filter(
+    data class ApplyFilter(
         val mealFilter: MealTypeFilter? = null,
         val dietFilter: DietTypeFilter? = null,
     ) : RecipesEvent()
+
+    data class Search(val searchQuery: String) : RecipesEvent()
+    object ClearSearch : RecipesEvent()
+    data class ClearFilter(val filter: Filter) : RecipesEvent()
 }
 
 @HiltViewModel
@@ -59,18 +67,20 @@ class RecipesViewModel @Inject constructor(
     fun onEvent(event: RecipesEvent) {
         when (event) {
             is RecipesEvent.Init -> init()
-            is RecipesEvent.Filter -> applyFilters(event.mealFilter, event.dietFilter)
+            is RecipesEvent.ApplyFilter -> applyFilters(event.mealFilter, event.dietFilter)
+            is RecipesEvent.Search -> fetchRecipesBySearch(event.searchQuery)
+            is RecipesEvent.ClearSearch -> clearSearch()
+            is RecipesEvent.ClearFilter -> clearFilter(event.filter)
         }
     }
 
     private fun init() {
         loadFiltersFromDataStore()
+        loadRecipes()
+    }
+
+    private fun loadRecipes() {
         loadRecipesFromCache()
-        viewModelScope.launch {
-            networkState.collect { value ->
-                Log.d("viewmodel", "is connected: $value")
-            }
-        }
     }
 
     private fun loadFiltersFromDataStore() {
@@ -98,7 +108,15 @@ class RecipesViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.saveMealAndDietFilter(mealType, dietType)
-            fetchRecipesFromRemote()
+            fetchRecipesByQuery()
+        }
+    }
+
+    private fun clearFilter(filter: Filter) {
+        when (filter) {
+            is MealTypeFilter -> _state.update { s -> s.copy(selectedMealFilter = null) }
+            is DietTypeFilter -> _state.update { s -> s.copy(selectedDietFilter = null) }
+            else -> {}
         }
     }
 
@@ -120,7 +138,7 @@ class RecipesViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    fetchRecipesFromRemote()
+                    fetchRecipesByQuery()
                 }
             }
         }
@@ -133,18 +151,41 @@ class RecipesViewModel @Inject constructor(
             diet = state.value.selectedDietFilter?.id,
             addRecipeInformation = true,
             fillIngredients = true,
+            searchQuery = _state.value.searchQuery,
         ).toQueryMap()
     }
 
-    private fun fetchRecipesFromRemote() {
+    private fun fetchRecipesBySearch(query: String) {
+        // TODO: simplify logic
+        _state.update { uiState ->
+            uiState.copy(
+                searchQuery = query,
+                searchHistory = uiState.searchHistory + query,
+            )
+        }
+        fetchRecipes(cache = false)
+    }
+
+    private fun clearSearch() {
+        _state.update { uiState -> uiState.copy(searchQuery = null) }
+        loadRecipes()
+    }
+
+    private fun fetchRecipesByQuery() {
+        fetchRecipes()
+    }
+
+    private fun fetchRecipes(cache: Boolean = true) {
         val queryMap = buildQueryMap()
         viewModelScope.launch {
             try {
                 _state.update { uiState -> uiState.copy(isLoading = true) }
                 val recipes = repository.remote.getRecipes(queries = queryMap)
                 _state.update { uiState -> uiState.copy(recipes = recipes) }
-                if (recipes.items.isNotEmpty()) {
-                    cacheRecipes(recipes)
+                if (cache) {
+                    if (recipes.items.isNotEmpty()) {
+                        cacheRecipes(recipes)
+                    }
                 }
             } catch (e: Exception) {
                 showError(e)

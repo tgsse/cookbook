@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -119,7 +119,7 @@ private fun Section(
                     label = { Text(active.label) },
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Outlined.Check,
+                            imageVector = Icons.Outlined.Clear,
                             contentDescription = stringResource(R.string.content_desc_checked),
                         )
                     },
