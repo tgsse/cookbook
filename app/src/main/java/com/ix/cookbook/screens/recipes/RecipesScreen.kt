@@ -2,9 +2,7 @@ package com.ix.cookbook.screens.recipes
 
 import android.util.Log
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -55,14 +52,15 @@ import com.ix.cookbook.R
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.Filter
 import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
+import com.ix.cookbook.data.requestUtil.filters.QueryFilter
 import com.ix.cookbook.screens.joke.FoodJokeScreen
 import com.ix.cookbook.screens.recipes.components.NoRecipes
 import com.ix.cookbook.screens.recipes.components.RecipeList
 import com.ix.cookbook.screens.recipes.components.RecipeListPlaceholder
 import com.ix.cookbook.screens.recipes.components.SearchHistoryItem
+import com.ix.cookbook.screens.recipes.components.SearchInputChips
 import com.ix.cookbook.ui.components.BottomSheet
 import com.ix.cookbook.ui.theme.CookbookTheme
-import com.ix.cookbook.ui.theme.spacing
 import com.ix.cookbook.util.Constants.Companion.maxSearchLength
 import kotlinx.coroutines.launch
 
@@ -71,7 +69,6 @@ import kotlinx.coroutines.launch
 fun RecipesScreen(
     viewModel: RecipesViewModel = hiltViewModel(),
 ) {
-
     // TODO: Refactor into smaller components
 
     val context = LocalContext.current
@@ -162,7 +159,7 @@ fun RecipesScreen(
                         }
                     },
                     onSearch = {
-                        viewModel.onEvent(RecipesEvent.Search(it))
+                        viewModel.onEvent(RecipesEvent.ApplyFilter(queryFilter = QueryFilter(it)))
                         isSearchBarActive = false
                         query = ""
                     },
@@ -188,7 +185,15 @@ fun RecipesScreen(
                     state.searchHistory.forEach { historyItem ->
                         SearchHistoryItem(
                             historyItem = historyItem,
-                            onClick = { viewModel.onEvent(RecipesEvent.Search(historyItem)) },
+                            onClick = {
+                                viewModel.onEvent(
+                                    RecipesEvent.ApplyFilter(
+                                        queryFilter = QueryFilter(
+                                            historyItem,
+                                        ),
+                                    ),
+                                )
+                            },
                         )
                     }
                 }
@@ -205,16 +210,14 @@ fun RecipesScreen(
                     ),
                     title = {
                         Text(
-                            text = state.searchQuery
+                            text = state.selectedQueryFilter?.value
                                 ?: stringResource(id = R.string.screen_recipes),
                         )
                     },
                     actions = {
-                        if (state.searchQuery != null) {
+                        if (state.selectedQueryFilter != null) {
                             IconButton(
-                                onClick = {
-                                    viewModel.onEvent(RecipesEvent.ClearSearch)
-                                },
+                                onClick = { onClearFilter(state.selectedQueryFilter as QueryFilter) },
                                 modifier = Modifier,
                             ) {
                                 Icon(
@@ -274,59 +277,12 @@ fun RecipesScreen(
             color = MaterialTheme.colorScheme.background,
         ) {
             Column {
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.m),
-                    modifier = Modifier
-                        .padding(horizontal = MaterialTheme.spacing.m),
-                ) {
-                    if (state.selectedMealFilter != null) {
-                        InputChip(
-                            selected = true,
-                            onClick = {
-                                onClearFilter(state.selectedMealFilter as MealTypeFilter)
-                            },
-                            label = { Text(state.selectedMealFilter!!.label) },
-                            trailingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Clear,
-                                    contentDescription = stringResource(R.string.content_desc_checked),
-                                )
-                            },
-                        )
-                    }
-                    if (state.selectedDietFilter != null) {
-                        InputChip(
-                            selected = true,
-                            onClick = {
-                                onClearFilter(state.selectedDietFilter as DietTypeFilter)
-                            },
-                            label = { Text(state.selectedDietFilter!!.label) },
-                            trailingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Clear,
-                                    contentDescription = stringResource(R.string.content_desc_checked),
-                                )
-                            },
-                        )
-                    }
-                    if (state.searchQuery != null) {
-                        InputChip(
-                            selected = true,
-                            onClick = {
-                                viewModel.onEvent(RecipesEvent.ClearSearch)
-                            },
-                            label = { Text("\"${state.searchQuery!!}\"") },
-                            trailingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Clear,
-                                    contentDescription = stringResource(R.string.content_desc_checked),
-                                )
-                            },
-                        )
-                    }
-
-                }
+                SearchInputChips(
+                    selectedMealFilter = state.selectedMealFilter,
+                    selectedDietFilter = state.selectedDietFilter,
+                    selectedQueryFilter = state.selectedQueryFilter,
+                    onClearFilter = { filter -> onClearFilter(filter) },
+                )
 
                 if (state.isLoading) {
                     RecipeListPlaceholder()

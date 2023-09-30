@@ -1,6 +1,7 @@
 package com.ix.cookbook.data.requestUtil.filters
 
-data class MealTypeFilter(
-    override val label: String,
+data class QueryFilter(
     override val value: String,
-) : Filter
+) : Filter {
+    override val label = "Search"
+}

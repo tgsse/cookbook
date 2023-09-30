@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
+import com.ix.cookbook.data.requestUtil.filters.QueryFilter
 import com.ix.cookbook.screens.recipes.defaultDietTypeFilters
 import com.ix.cookbook.screens.recipes.defaultMealTypeFilters
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,27 +26,36 @@ class DataStoreRepository @Inject constructor(
 ) {
 
     companion object {
+        private const val FILE_NAME = "settings"
+
         const val PREF_KEY_MEAL_TYPE = "mealType"
         const val PREF_KEY_DIET_TYPE = "dietType"
-        private const val FILE_NAME = "settings"
+        const val PREF_KEY_QUERY = "query"
     }
 
     private object Keys {
         val selectedMealType = stringPreferencesKey(PREF_KEY_MEAL_TYPE)
 
         val selectedDietType = stringPreferencesKey(PREF_KEY_DIET_TYPE)
+
+        val selectedQuery = stringPreferencesKey(PREF_KEY_QUERY)
     }
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = FILE_NAME)
 
-    suspend fun saveMealAndDietFilter(mealFilter: MealTypeFilter?, dietFilter: DietTypeFilter?) {
+    suspend fun saveFilters(
+        mealFilter: MealTypeFilter?,
+        dietFilter: DietTypeFilter?,
+        queryFilter: QueryFilter?,
+    ) {
         context.dataStore.edit { settings ->
-            settings[Keys.selectedMealType] = mealFilter?.id.orEmpty()
-            settings[Keys.selectedDietType] = dietFilter?.id.orEmpty()
+            settings[Keys.selectedMealType] = mealFilter?.value.orEmpty()
+            settings[Keys.selectedDietType] = dietFilter?.value.orEmpty()
+            settings[Keys.selectedQuery] = queryFilter?.value.orEmpty()
         }
     }
 
-    val readMealAndDietFilter: Flow<MealAndDietFilters> = context.dataStore.data
+    val filters: Flow<RecipesFilters> = context.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -55,25 +65,33 @@ class DataStoreRepository @Inject constructor(
         }
         .map { prefs ->
             val mealType = if (!prefs[Keys.selectedMealType].isNullOrBlank()) {
-                defaultMealTypeFilters.find { it.id == prefs[Keys.selectedMealType] }
+                defaultMealTypeFilters.find { it.value == prefs[Keys.selectedMealType] }
             } else {
                 null
             }
 
             val dietType = if (!prefs[Keys.selectedDietType].isNullOrBlank()) {
-                defaultDietTypeFilters.find { it.id == prefs[Keys.selectedDietType] }
+                defaultDietTypeFilters.find { it.value == prefs[Keys.selectedDietType] }
             } else {
                 null
             }
 
-            MealAndDietFilters(
+            val query = if (!prefs[Keys.selectedQuery].isNullOrBlank()) {
+                QueryFilter(value = prefs[Keys.selectedQuery]!!)
+            } else {
+                null
+            }
+
+            RecipesFilters(
                 selectedMealType = mealType,
                 selectedDietType = dietType,
+                selectedQuery = query,
             )
         }
 }
 
-data class MealAndDietFilters(
+data class RecipesFilters(
     val selectedMealType: MealTypeFilter?,
     val selectedDietType: DietTypeFilter?,
+    val selectedQuery: QueryFilter?,
 )

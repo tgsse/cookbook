@@ -13,6 +13,7 @@ import com.ix.cookbook.data.requestUtil.RecipesQuery
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.Filter
 import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
+import com.ix.cookbook.data.requestUtil.filters.QueryFilter
 import com.ix.cookbook.util.NetworkListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +31,7 @@ data class RecipesState(
     val recipes: Recipes = Recipes(),
     var selectedMealFilter: MealTypeFilter? = null,
     var selectedDietFilter: DietTypeFilter? = null,
-
-    var searchQuery: String? = null,
+    var selectedQueryFilter: QueryFilter? = null,
     var searchHistory: List<String> = emptyList(),
 )
 
@@ -40,10 +40,11 @@ sealed class RecipesEvent {
     data class ApplyFilter(
         val mealFilter: MealTypeFilter? = null,
         val dietFilter: DietTypeFilter? = null,
+        val queryFilter: QueryFilter? = null,
     ) : RecipesEvent()
 
-    data class Search(val searchQuery: String) : RecipesEvent()
-    object ClearSearch : RecipesEvent()
+    //    data class Search(val searchQuery: String) : RecipesEvent()
+//    object ClearSearch : RecipesEvent()
     data class ClearFilter(val filter: Filter) : RecipesEvent()
 }
 
@@ -67,9 +68,14 @@ class RecipesViewModel @Inject constructor(
     fun onEvent(event: RecipesEvent) {
         when (event) {
             is RecipesEvent.Init -> init()
-            is RecipesEvent.ApplyFilter -> applyFilters(event.mealFilter, event.dietFilter)
-            is RecipesEvent.Search -> fetchRecipesBySearch(event.searchQuery)
-            is RecipesEvent.ClearSearch -> clearSearch()
+            is RecipesEvent.ApplyFilter -> applyFilters(
+                event.mealFilter,
+                event.dietFilter,
+                event.queryFilter,
+            )
+
+//            is RecipesEvent.Search -> fetchRecipesBySearch(event.searchQuery)
+//            is RecipesEvent.ClearSearch -> clearSearch()
             is RecipesEvent.ClearFilter -> clearFilter(event.filter)
         }
     }
@@ -85,30 +91,36 @@ class RecipesViewModel @Inject constructor(
 
     private fun loadFiltersFromDataStore() {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.readMealAndDietFilter.collect { value ->
+            dataStoreRepository.filters.collect { value ->
                 _state.update { uiState ->
                     uiState.copy(
                         selectedMealFilter = value.selectedMealType,
                         selectedDietFilter = value.selectedDietType,
+                        selectedQueryFilter = value.selectedQuery,
                     )
                 }
             }
         }
     }
 
-    private fun applyFilters(mealType: MealTypeFilter?, dietType: DietTypeFilter?) {
-        if (mealType == state.value.selectedMealFilter && dietType == state.value.selectedDietFilter) {
+    private fun applyFilters(
+        mealType: MealTypeFilter?,
+        dietType: DietTypeFilter?,
+        query: QueryFilter?,
+    ) {
+        if (mealType == state.value.selectedMealFilter && dietType == state.value.selectedDietFilter && state.value.selectedQueryFilter == query) {
             return
         }
         _state.update { uiState ->
             uiState.copy(
                 selectedMealFilter = mealType,
                 selectedDietFilter = dietType,
+                selectedQueryFilter = query,
             )
         }
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.saveMealAndDietFilter(mealType, dietType)
-            fetchRecipesByQuery()
+            dataStoreRepository.saveFilters(mealType, dietType, query)
+            fetchRecipes()
         }
     }
 
@@ -116,6 +128,7 @@ class RecipesViewModel @Inject constructor(
         when (filter) {
             is MealTypeFilter -> _state.update { s -> s.copy(selectedMealFilter = null) }
             is DietTypeFilter -> _state.update { s -> s.copy(selectedDietFilter = null) }
+            is QueryFilter -> _state.update { s -> s.copy(selectedQueryFilter = null) }
             else -> {}
         }
     }
@@ -138,7 +151,7 @@ class RecipesViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    fetchRecipesByQuery()
+                    fetchRecipes()
                 }
             }
         }
@@ -147,32 +160,12 @@ class RecipesViewModel @Inject constructor(
     private fun buildQueryMap(): HashMap<String, String> {
         return RecipesQuery(
             number = 1,
-            type = state.value.selectedMealFilter?.id,
-            diet = state.value.selectedDietFilter?.id,
+            type = state.value.selectedMealFilter?.value,
+            diet = state.value.selectedDietFilter?.value,
             addRecipeInformation = true,
             fillIngredients = true,
-            searchQuery = _state.value.searchQuery,
+            query = _state.value.selectedQueryFilter?.value,
         ).toQueryMap()
-    }
-
-    private fun fetchRecipesBySearch(query: String) {
-        // TODO: simplify logic
-        _state.update { uiState ->
-            uiState.copy(
-                searchQuery = query,
-                searchHistory = uiState.searchHistory + query,
-            )
-        }
-        fetchRecipes(cache = false)
-    }
-
-    private fun clearSearch() {
-        _state.update { uiState -> uiState.copy(searchQuery = null) }
-        loadRecipes()
-    }
-
-    private fun fetchRecipesByQuery() {
-        fetchRecipes()
     }
 
     private fun fetchRecipes(cache: Boolean = true) {

@@ -69,14 +69,14 @@ fun BottomSheet(
             Section(
                 title = "Meal type",
                 filters = mealFilters,
-                selected = selectedMealType?.id,
+                selected = selectedMealType?.value,
                 active = selectedMealType,
                 onSelect = { filter -> selectedMealType = filter as MealTypeFilter? },
             )
             Section(
                 title = "Diet type",
                 filters = dietFilters,
-                selected = selectedDietType?.id,
+                selected = selectedDietType?.value,
                 active = selectedDietType,
                 onSelect = { filter -> selectedDietType = filter as DietTypeFilter? },
             )
@@ -133,7 +133,7 @@ private fun Section(
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.s),
         ) {
             filters.forEach {
-                if (it.id != selected) {
+                if (it.value != selected) {
                     FilterChip(
                         selected = false,
                         label = { Text(it.label) },
