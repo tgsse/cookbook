@@ -19,4 +19,21 @@
     <string name="content_desc_filter_search_results">Filter search results</string>
     <string name="content_desc_clear_search_results">Clear search results</string>
     <string name="content_desc_remove_filter">Remove filter</string>
+    <string name="label_tab_overview">Overview</string>
+    <string name="label_tab_ingredients">Ingredients</string>
+    <string name="label_tab_instructions">Instructions</string>
+    <string name="content_desc_step_done">Step done</string>
+    <string name="label_step_number">Step %1$d</string>
+
+    <plurals name="label_ingredient_unit">
+        <!--
+             As a developer, you should always supply "one" and "other"
+             strings. Your translators will know which strings are actually
+             needed for their language. Always include %d in "one" because
+             translators will need to use %d for languages where "one"
+             doesn't mean 1 (as explained above).
+          -->
+        <item quantity="one">%1$d %2$s</item>
+        <item quantity="other">%1$d %2$ss</item>
+    </plurals>
 </resources>

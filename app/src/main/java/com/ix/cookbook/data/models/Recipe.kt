@@ -7,7 +7,16 @@ val dummyRecipe = Recipe(
     aggregateLikes = 124,
     cheap = true,
     dairyFree = false,
-    extendedIngredients = emptyList(),
+    extendedIngredients = listOf(
+        ExtendedIngredient(
+            amount = 2.00,
+            unit = "Tablespoon",
+            name = "Cinnamon",
+            original = "original",
+            consistency = "Solid",
+            image = null,
+        ),
+    ),
     glutenFree = false,
     id = 0,
     image = "",
@@ -18,14 +27,25 @@ val dummyRecipe = Recipe(
     title = "Recipe Title",
     vegan = true,
     veryHealthy = false,
+    analyzedInstructions = listOf(
+        AnalyzedInstruction(
+            "Prepare",
+            listOf(
+                Step(
+                    step = "Combine ingredients Chupa chups cotton candy cookie icing bear claw. Icing toffee chupa chups croissant bonbon cheesecake. Chocolate gummi ",
+                    number = 1,
+                ),
+            ),
+        ),
+    ),
 )
 
 @Serializable
 data class Recipe(
     @SerialName("aggregateLikes")
     val aggregateLikes: Int,
-//    @SerialName("analyzedInstructions")
-//    val analyzedInstructions: List<_AnalyzedInstruction>,
+    @SerialName("analyzedInstructions")
+    val analyzedInstructions: List<AnalyzedInstruction>,
     @SerialName("cheap")
     val cheap: Boolean,
 //    @SerialName("cookingMinutes")

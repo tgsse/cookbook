@@ -14,7 +14,7 @@ sealed class Screen(
     val icon: ImageVector,
 ) {
     object Recipes : Screen(
-        route = "recipes",
+        route = "list",
         label = R.string.screen_recipes,
         icon = Icons.Outlined.Restaurant,
     )

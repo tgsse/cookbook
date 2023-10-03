@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [RecipesEntity::class],
-    version = 1,
+    version = 2, // NOTE: this needs to be updated if the model changes. Migration is required as well
     exportSchema = false,
 )
 @TypeConverters(RecipesTypeConverter::class)

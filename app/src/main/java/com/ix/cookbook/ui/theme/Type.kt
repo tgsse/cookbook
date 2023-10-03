@@ -43,6 +43,10 @@ val Typography = Typography(
         fontFamily = Fonts.body,
         fontSize = 14.sp,
     ),
+    displaySmall = TextStyle(
+        fontFamily = Fonts.title,
+        fontWeight = FontWeight.SemiBold,
+    ),
     titleMedium = TextStyle(
         fontFamily = Fonts.title,
         fontWeight = FontWeight.SemiBold,

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ix.cookbook.R
 import com.ix.cookbook.data.databases.RecipesEntity
+import com.ix.cookbook.data.models.Recipe
 import com.ix.cookbook.data.models.Recipes
 import com.ix.cookbook.data.repositories.DataStoreRepository
 import com.ix.cookbook.data.repositories.RecipesRepository
@@ -33,6 +34,7 @@ data class RecipesState(
     var selectedDietFilter: DietTypeFilter? = null,
     var selectedQueryFilter: QueryFilter? = null,
     var searchHistory: List<String> = emptyList(),
+    var selectedRecipe: Recipe? = null,
 )
 
 sealed class RecipesEvent {
@@ -46,6 +48,8 @@ sealed class RecipesEvent {
     //    data class Search(val searchQuery: String) : RecipesEvent()
 //    object ClearSearch : RecipesEvent()
     data class ClearFilter(val filter: Filter) : RecipesEvent()
+
+    data class ViewRecipeDetails(val recipe: Recipe) : RecipesEvent()
 }
 
 @HiltViewModel
@@ -77,6 +81,14 @@ class RecipesViewModel @Inject constructor(
 //            is RecipesEvent.Search -> fetchRecipesBySearch(event.searchQuery)
 //            is RecipesEvent.ClearSearch -> clearSearch()
             is RecipesEvent.ClearFilter -> clearFilter(event.filter)
+            is RecipesEvent.ViewRecipeDetails -> viewRecipeDetails(event.recipe)
+        }
+    }
+
+    private fun viewRecipeDetails(recipe: Recipe) {
+        _state.update { s -> s.copy(selectedRecipe = recipe) }
+        viewModelScope.launch {
+            uiEventChannel.send(UiEvent.NavigateToDetail)
         }
     }
 
@@ -202,7 +214,8 @@ class RecipesViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowMessage(val message: String) : UiEvent()
-//        data class NavigateToDetail(val recipe: Recipe) : UiEvent()
+
+        object NavigateToDetail : UiEvent()
     }
 }
 
