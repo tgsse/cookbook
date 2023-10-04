@@ -1,10 +1,12 @@
 package com.ix.cookbook.screens.recipes.details
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -43,16 +45,21 @@ private fun IngredientItem(ingredient: ExtendedIngredient) {
             .fillMaxWidth(),
     ) {
         Row {
-            AsyncImage(
-                model = "${INGREDIENT_CDN_URL}${ingredient.image}",
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                alignment = Alignment.Center,
-                error = painterResource(id = R.drawable.image_placeholder),
+            Box(
                 modifier = Modifier
-                    .width(160.dp)
-                    .heightIn(max = 180.dp),
-            )
+                    .width(140.dp)
+                    .heightIn(max = 120.dp),
+            ) {
+                AsyncImage(
+                    model = "${INGREDIENT_CDN_URL}${ingredient.image}",
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    error = painterResource(id = R.drawable.image_placeholder),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                )
+            }
             Column(
                 modifier = Modifier
                     .padding(MaterialTheme.spacing.s),
