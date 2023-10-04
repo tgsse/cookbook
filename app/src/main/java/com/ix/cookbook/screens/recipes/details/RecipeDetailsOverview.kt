@@ -44,8 +44,7 @@ fun RecipeDetailsOverview(recipe: Recipe) {
                 .fillMaxWidth()
                 .height(250.dp),
             contentAlignment = Alignment.BottomCenter,
-        )
-        {
+        ) {
             AsyncImage(
                 model = recipe.image,
                 contentDescription = null,
@@ -60,10 +59,10 @@ fun RecipeDetailsOverview(recipe: Recipe) {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .alpha(.6f)
                     .background(Color.Black)
                     .padding(MaterialTheme.spacing.s)
-                    .padding(end = MaterialTheme.spacing.m)
-                    .alpha(.4f),
+                    .padding(end = MaterialTheme.spacing.m),
             ) {
                 RecipeLikes(likes = recipe.aggregateLikes)
                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.m))

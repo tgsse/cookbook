@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.flowWithLifecycle
-import androidx.navigation.compose.rememberNavController
 import com.ix.cookbook.R
 import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.Filter
@@ -57,13 +56,13 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipesScreen(
+    navigateToDetails: () -> Unit,
     viewModel: RecipesViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val navController = rememberNavController()
 
     val sheetState = rememberModalBottomSheetState()
     var isSheetVisible by remember { mutableStateOf(false) }
@@ -97,7 +96,7 @@ fun RecipesScreen(
 
                 is RecipesViewModel.UiEvent.NavigateToDetail -> {
                     withContext(Dispatchers.Main) {
-                        navController.navigate("recipes/details")
+                        navigateToDetails()
                     }
                 }
             }
@@ -225,6 +224,6 @@ fun RecipesScreen(
 @Composable
 fun RecipesPreview() {
     CookbookTheme {
-        RecipesScreen()
+        RecipesScreen(navigateToDetails = {})
     }
 }

@@ -86,8 +86,8 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun viewRecipeDetails(recipe: Recipe) {
-        _state.update { s -> s.copy(selectedRecipe = recipe) }
         viewModelScope.launch {
+            _state.update { s -> s.copy(selectedRecipe = recipe) }
             uiEventChannel.send(UiEvent.NavigateToDetail)
         }
     }

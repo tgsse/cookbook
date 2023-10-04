@@ -46,6 +46,8 @@ val Typography = Typography(
     displaySmall = TextStyle(
         fontFamily = Fonts.title,
         fontWeight = FontWeight.SemiBold,
+        fontSize = 36.sp,
+        lineHeight = 44.sp,
     ),
     titleMedium = TextStyle(
         fontFamily = Fonts.title,
@@ -58,6 +60,11 @@ val Typography = Typography(
         fontFamily = Fonts.body,
         fontSize = 20.sp,
         lineHeight = 24.sp,
+    ),
+    labelMedium = TextStyle(
+        fontFamily = Fonts.body,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
     ),
     /* Other default text styles to override
     titleLarge = TextStyle(
