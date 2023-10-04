@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 data class ExtendedIngredient(
 //    @SerialName("aisle")
 //    val aisle: String,
-    @SerialName("amount")
-    val amount: Double,
-    @SerialName("consistency")
-    val consistency: String,
+//    @SerialName("amount")
+//    val amount: Double,
+//    @SerialName("consistency")
+//    val consistency: String,
 //    @SerialName("id")
 //    val id: Int,
     @SerialName("image")
@@ -27,6 +27,6 @@ data class ExtendedIngredient(
     val original: String,
 //    @SerialName("originalName")
 //    val originalName: String,
-    @SerialName("unit")
-    val unit: String,
+//    @SerialName("unit")
+//    val unit: String,
 )

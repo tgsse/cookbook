@@ -9,11 +9,8 @@ val dummyRecipe = Recipe(
     dairyFree = false,
     extendedIngredients = listOf(
         ExtendedIngredient(
-            amount = 2.00,
-            unit = "Tablespoon",
             name = "Cinnamon",
-            original = "original",
-            consistency = "Solid",
+            original = "1 teaspoon of chupa chups cheesecake",
             image = null,
         ),
     ),

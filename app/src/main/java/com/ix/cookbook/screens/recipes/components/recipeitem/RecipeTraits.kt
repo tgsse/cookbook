@@ -45,7 +45,6 @@ fun RecipeTraits(recipe: Recipe) {
     }
 }
 
-
 @Composable
 private fun Trait(label: String) {
     Row {
@@ -57,12 +56,6 @@ private fun Trait(label: String) {
         )
     }
 }
-
-
-//@Composable
-//fun TraitSpacer() {
-//    Spacer(modifier = Modifier.width(MaterialTheme.spacing.l))
-//}
 
 @Preview
 @Composable
