@@ -7,7 +7,7 @@ object Colors {
     val deepPurple = Color(0xFF5502C8)
     val lightPurple = Color(0xFF9D46FF)
 
-    val lightGray = Color(0xFFF9F9F9)
+    val lightGray = Color(0xFFEBEBEB)
     val mediumGray = Color(0x80D1D1D1)
 
     val dark = Color(0xFF313C44)

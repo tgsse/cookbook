@@ -29,9 +29,11 @@ labelSmall	    New Roboto Medium,  11/16
 * */
 
 object Fonts {
-    val title = FontFamily(Font(R.font.indieflower_regular))
+    val display = FontFamily(Font(R.font.indieflower_regular))
     val body = FontFamily(Font(R.font.notosans_regular))
 }
+
+// TODO simplify theming
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -43,18 +45,23 @@ val Typography = Typography(
         fontFamily = Fonts.body,
         fontSize = 14.sp,
     ),
-    displaySmall = TextStyle(
-        fontFamily = Fonts.title,
+    displayLarge = TextStyle(
+        fontFamily = Fonts.display,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 36.sp,
-        lineHeight = 44.sp,
+        fontSize = 32.sp,
+        lineHeight = 40.sp,
     ),
-    titleMedium = TextStyle(
-        fontFamily = Fonts.title,
+    displayMedium = TextStyle(
+        fontFamily = Fonts.display,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 26.sp,
+        lineHeight = 34.sp,
+    ),
+    displaySmall = TextStyle(
+        fontFamily = Fonts.display,
         fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp,
         lineHeight = 26.sp,
-//        letterSpacing = 0.15.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = Fonts.body,

@@ -65,7 +65,7 @@ fun RecipeItem(
                     text = recipe.title,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.displaySmall,
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.s))
                 RecipeAttributes(

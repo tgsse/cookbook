@@ -1,6 +1,5 @@
 package com.ix.cookbook.screens.recipes.details
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,13 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,7 +37,8 @@ import com.ix.cookbook.ui.theme.spacing
 fun RecipeDetailsOverview(recipe: Recipe) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         Box(
             modifier = Modifier
@@ -59,9 +60,6 @@ fun RecipeDetailsOverview(recipe: Recipe) {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .alpha(.6f)
-                    .background(Color.Black)
-                    .padding(MaterialTheme.spacing.s)
                     .padding(end = MaterialTheme.spacing.m),
             ) {
                 RecipeLikes(likes = recipe.aggregateLikes)
@@ -77,9 +75,9 @@ fun RecipeDetailsOverview(recipe: Recipe) {
 
             Text(
                 text = recipe.title,
-                maxLines = 2,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.displaySmall,
+                style = MaterialTheme.typography.displayLarge,
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.m))
@@ -92,10 +90,11 @@ fun RecipeDetailsOverview(recipe: Recipe) {
                 text = "Description",
                 modifier = Modifier.alpha(.7f),
             )
+
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.s))
+
             Text(
                 text = recipe.summary,
-                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
