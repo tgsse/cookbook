@@ -24,6 +24,7 @@
     <string name="label_tab_instructions">Instructions</string>
     <string name="content_desc_step_done">Step done</string>
     <string name="label_step_number">Step %1$d</string>
+    <string name="content_desc_navigate_back">Navigate back</string>
 
     <plurals name="label_ingredient_unit">
         <!--

@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class RecipesScreenTest {
+class RecipesMainTabsTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -19,7 +19,7 @@ class RecipesScreenTest {
     @Before
     fun setup() {
         composeTestRule.setContent {
-            RecipesScreen()
+            RecipesScreen({})
         }
     }
 
