@@ -5,7 +5,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ix.cookbook.R
-import com.ix.cookbook.data.databases.RecipesEntity
+import com.ix.cookbook.data.databases.entities.FavoriteRecipeEntity
+import com.ix.cookbook.data.databases.entities.RecipesEntity
 import com.ix.cookbook.data.models.Recipe
 import com.ix.cookbook.data.models.Recipes
 import com.ix.cookbook.data.repositories.DataStoreRepository
@@ -35,6 +36,7 @@ data class RecipesState(
     var selectedQueryFilter: QueryFilter? = null,
     var searchHistory: List<String> = emptyList(),
     var selectedRecipe: Recipe? = null,
+    val favoriteRecipes: List<FavoriteRecipeEntity> = emptyList(),
 )
 
 sealed class RecipesEvent {
@@ -50,6 +52,7 @@ sealed class RecipesEvent {
     data class ClearFilter(val filter: Filter) : RecipesEvent()
 
     data class ViewRecipeDetails(val recipe: Recipe) : RecipesEvent()
+    data class Favorite(val recipe: Recipe) : RecipesEvent()
 }
 
 @HiltViewModel
@@ -82,6 +85,7 @@ class RecipesViewModel @Inject constructor(
 //            is RecipesEvent.ClearSearch -> clearSearch()
             is RecipesEvent.ClearFilter -> clearFilter(event.filter)
             is RecipesEvent.ViewRecipeDetails -> viewRecipeDetails(event.recipe)
+            is RecipesEvent.Favorite -> favoriteRecipe(event.recipe)
         }
     }
 
@@ -93,6 +97,7 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun init() {
+        loadFavoriteRecipes()
         loadFiltersFromDataStore()
         loadRecipes()
     }
@@ -111,6 +116,48 @@ class RecipesViewModel @Inject constructor(
                         selectedQueryFilter = value.selectedQuery,
                     )
                 }
+            }
+        }
+    }
+
+    private fun loadFavoriteRecipes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.readFavoriteRecipes().collect {
+                _state.update { uiState ->
+                    uiState.copy(
+                        favoriteRecipes = it,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun favoriteRecipe(recipe: Recipe) {
+        val storedFavorite = state.value.favoriteRecipes.find { it.externalId == recipe.id }
+        if (storedFavorite == null) {
+            // favorite
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.local.insertFavoriteRecipe(FavoriteRecipeEntity(recipe))
+            }
+            viewModelScope.launch {
+                uiEventChannel.send(
+                    element = UiEvent.ShowMessage(
+                        message = getApplication<Application>().resources.getString(R.string.message_added_to_favorites),
+                    ),
+                )
+            }
+        } else {
+            // un favorite
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.local.deleteFavoriteRecipe(storedFavorite)
+            }
+
+            viewModelScope.launch {
+                uiEventChannel.send(
+                    element = UiEvent.ShowMessage(
+                        message = getApplication<Application>().resources.getString(R.string.message_removed_from_favorites),
+                    ),
+                )
             }
         }
     }

@@ -66,6 +66,7 @@ fun NavigationHost(
 @Composable
 fun BottomTabNavHost(viewModel: RecipesViewModel, onNavigateToDetails: () -> Unit) {
     val navController = rememberNavController()
+
     Scaffold(
         bottomBar = {
             NavBar(navController)

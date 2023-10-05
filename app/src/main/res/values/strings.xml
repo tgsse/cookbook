@@ -25,6 +25,11 @@
     <string name="content_desc_step_done">Step done</string>
     <string name="label_step_number">Step %1$d</string>
     <string name="content_desc_navigate_back">Navigate back</string>
+    <string name="content_desc_favorite">Save to favorites</string>
+    <string name="content_desc_unfavorite">Remove from favorites</string>
+    <string name="error_favorites_empty">Could not find any favorite recipes</string>
+    <string name="message_added_to_favorites">Added recipe to favorites</string>
+    <string name="message_removed_from_favorites">Removed recipe from favorites</string>
 
     <plurals name="label_ingredient_unit">
         <!--

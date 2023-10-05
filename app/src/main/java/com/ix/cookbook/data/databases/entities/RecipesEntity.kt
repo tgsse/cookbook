@@ -1,4 +1,4 @@
-package com.ix.cookbook.data.databases
+package com.ix.cookbook.data.databases.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

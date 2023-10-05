@@ -21,7 +21,9 @@ import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing
 
 @Composable
-fun NoRecipes() {
+fun NoRecipes(
+    reason: String,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -36,7 +38,7 @@ fun NoRecipes() {
                 .padding(bottom = MaterialTheme.spacing.m)
                 .size(80.dp),
         )
-        Text(stringResource(R.string.error_recipes_not_found))
+        Text(reason)
     }
 }
 
@@ -44,6 +46,6 @@ fun NoRecipes() {
 @Composable
 private fun NoRecipesPreview() {
     CookbookTheme {
-        NoRecipes()
+        NoRecipes(stringResource(R.string.error_recipes_not_found))
     }
 }
