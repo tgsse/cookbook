@@ -69,7 +69,7 @@ fun SearchInputChips(
             InputChip(
                 selected = true,
                 onClick = { onClearFilter(selectedQueryFilter) },
-                label = { Text("\"$selectedQueryFilter\"") },
+                label = { Text("\"${selectedQueryFilter.value}\"") },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Clear,

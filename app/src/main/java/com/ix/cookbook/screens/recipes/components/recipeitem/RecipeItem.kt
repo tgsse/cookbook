@@ -1,6 +1,5 @@
 package com.ix.cookbook.screens.recipes.components.recipeitem
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,15 +35,14 @@ val cardHeight = 180.dp
 @Composable
 fun RecipeItem(
     recipe: Recipe,
-    onItemClick: (Recipe) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         colors = CardDefaults.cardColors(
             contentColor = MaterialTheme.typography.bodySmall.color,
         ),
-        modifier = Modifier
-            .height(cardHeight)
-            .clickable { onItemClick(recipe) },
+        modifier = modifier
+            .height(cardHeight),
     ) {
         Row {
             AsyncImage(
@@ -92,7 +90,7 @@ fun RecipeItem(
 @Composable
 private fun RecipeItemPreview() {
     CookbookTheme {
-        RecipeItem(dummyRecipe) { _ -> }
+        RecipeItem(dummyRecipe)
     }
 }
 

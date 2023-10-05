@@ -31,6 +31,9 @@
     <string name="message_added_to_favorites">Added recipe to favorites</string>
     <string name="message_removed_from_favorites">Removed recipe from favorites</string>
 
+    <string name="label_selected_items_count">Selected %1$s</string>
+    <string name="content_desc_remove_favorites">Remove favorites</string>
+
     <plurals name="label_ingredient_unit">
         <!--
              As a developer, you should always supply "one" and "other"

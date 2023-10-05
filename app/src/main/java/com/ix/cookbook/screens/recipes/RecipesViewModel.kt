@@ -53,6 +53,7 @@ sealed class RecipesEvent {
 
     data class ViewRecipeDetails(val recipe: Recipe) : RecipesEvent()
     data class Favorite(val recipe: Recipe) : RecipesEvent()
+    data class DeleteFavorites(val ids: List<Int>) : RecipesEvent()
 }
 
 @HiltViewModel
@@ -86,6 +87,7 @@ class RecipesViewModel @Inject constructor(
             is RecipesEvent.ClearFilter -> clearFilter(event.filter)
             is RecipesEvent.ViewRecipeDetails -> viewRecipeDetails(event.recipe)
             is RecipesEvent.Favorite -> favoriteRecipe(event.recipe)
+            is RecipesEvent.DeleteFavorites -> deleteSelectedFavorites(event.ids)
         }
     }
 
@@ -159,6 +161,12 @@ class RecipesViewModel @Inject constructor(
                     ),
                 )
             }
+        }
+    }
+
+    private fun deleteSelectedFavorites(recipeIds: List<Int>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteFavoriteRecipes(recipeIds)
         }
     }
 
