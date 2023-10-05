@@ -1,5 +1,6 @@
 package com.ix.cookbook.screens.recipes.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -60,7 +63,12 @@ fun RecipeDetailsOverview(recipe: Recipe) {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = MaterialTheme.spacing.m),
+                    .padding(end = MaterialTheme.spacing.m)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = .3f)),
+                        ),
+                    ),
             ) {
                 RecipeLikes(likes = recipe.aggregateLikes)
                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.m))
