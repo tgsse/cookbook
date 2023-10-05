@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ix.cookbook.R
 import com.ix.cookbook.data.models.Recipe
 import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.ui.components.BackIconButton
 import com.ix.cookbook.ui.components.TopBar
 import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.CookbookTheme
@@ -58,14 +58,7 @@ fun RecipeDetails(
                 TopBar(
                     title = selectedRecipe.title,
                     navigationIcon = {
-                        IconButton(onClick = { onNavigateBack() }) {
-                            Icon(
-                                imageVector = Icons.Outlined.ArrowBack,
-                                contentDescription = stringResource(
-                                    R.string.content_desc_navigate_back,
-                                ),
-                            )
-                        }
+                        BackIconButton(onClick = { onNavigateBack() })
                     },
                     actions = {
                         FavoriteButton(
