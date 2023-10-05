@@ -55,7 +55,7 @@ val Typography = Typography(
         fontFamily = Fonts.display,
         fontWeight = FontWeight.SemiBold,
         fontSize = 26.sp,
-        lineHeight = 34.sp,
+        lineHeight = 32.sp,
     ),
     displaySmall = TextStyle(
         fontFamily = Fonts.display,

@@ -51,11 +51,7 @@ fun NavBar(navController: NavController) {
                     )
                 },
                 label = { Text(stringResource(screen.label)) },
-                selected = currentDestination?.hierarchy?.any { dest ->
-                    dest.route?.let {
-                        screen.route.contains(it)
-                    } == true
-                } == true,
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
                     navController.navigate(screen.route) {
                         // Pop up to the start destination of the graph to

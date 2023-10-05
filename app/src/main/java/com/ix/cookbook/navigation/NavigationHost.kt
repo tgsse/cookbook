@@ -10,25 +10,62 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import com.ix.cookbook.screens.favorites.FavoriteRecipesScreen
 import com.ix.cookbook.screens.joke.FoodJokeScreen
+import com.ix.cookbook.screens.recipes.RecipesEvent
 import com.ix.cookbook.screens.recipes.RecipesScreen
 import com.ix.cookbook.screens.recipes.RecipesViewModel
 import com.ix.cookbook.screens.recipes.details.RecipeDetails
-
-private object SubGraphs {
-    const val recipes = "recipes"
-}
 
 @Composable
 fun NavigationHost(
     navController: NavHostController,
 ) {
+    NavHost(
+        navController,
+        startDestination = Routes.Main.route,
+        route = Routes.Root.route,
+    ) {
+
+        fun onNavigateToDetails() {
+            navController.navigate(
+                route = Routes.RecipeDetails.route,
+            ) {
+                popUpTo(Routes.Main.route)
+            }
+        }
+
+        composable(Routes.Main.route) { entry ->
+            val viewModel = entry.sharedViewModel<RecipesViewModel>(navController = navController)
+            BottomTabNavHost(viewModel = viewModel, onNavigateToDetails = { onNavigateToDetails() })
+        }
+
+        composable(Routes.RecipeDetails.route) { entry ->
+            val viewModel = entry.sharedViewModel<RecipesViewModel>(navController = navController)
+            val state = viewModel.state.collectAsStateWithLifecycle()
+            val isFavorite = if (state.value.selectedRecipe != null) {
+                state.value.favoriteRecipes.find { it.externalId == state.value.selectedRecipe!!.id } != null
+            } else {
+                false
+            }
+
+            RecipeDetails(
+                selectedRecipe = state.value.selectedRecipe,
+                onNavigateBack = { navController.popBackStack() },
+                isFavorite = isFavorite,
+                onFavoriteClick = { recipe -> viewModel.onEvent(RecipesEvent.Favorite(recipe)) },
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomTabNavHost(viewModel: RecipesViewModel, onNavigateToDetails: () -> Unit) {
+    val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             NavBar(navController)
@@ -36,45 +73,22 @@ fun NavigationHost(
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = SubGraphs.recipes,
+            startDestination = Routes.RecipesList.route,
             Modifier.padding(innerPadding),
         ) {
-            recipesGraph(navController)
-            composable(Routes.FavoriteRecipes.route) { FavoriteRecipesScreen() }
+            composable(Routes.RecipesList.route) {
+                RecipesScreen(
+                    viewModel = viewModel,
+                    navigateToDetails = onNavigateToDetails,
+                )
+            }
+            composable(Routes.FavoriteRecipes.route) {
+                FavoriteRecipesScreen(
+                    viewModel = viewModel,
+                    onNavigateToDetails = onNavigateToDetails,
+                )
+            }
             composable(Routes.FoodJoke.route) { FoodJokeScreen() }
-        }
-    }
-}
-
-private fun NavGraphBuilder.recipesGraph(navController: NavController) {
-    fun navigateToDetails() {
-        navController.navigate(
-            route = Routes.RecipeDetails.route,
-        ) {
-            popUpTo(Routes.RecipesList.route)
-        }
-    }
-
-    navigation(
-        startDestination = Routes.RecipesList.route,
-        route = SubGraphs.recipes,
-    ) {
-        composable(Routes.RecipesList.route) { entry ->
-            val viewModel = entry.sharedViewModel<RecipesViewModel>(navController = navController)
-
-            RecipesScreen(
-                viewModel = viewModel,
-                navigateToDetails = { navigateToDetails() },
-            )
-        }
-        composable(Routes.RecipeDetails.route) { entry ->
-            val viewModel = entry.sharedViewModel<RecipesViewModel>(navController = navController)
-            val state = viewModel.state.collectAsStateWithLifecycle()
-
-            RecipeDetails(
-                selectedRecipe = state.value.selectedRecipe,
-                onNavigateBack = { navController.popBackStack() },
-            )
         }
     }
 }
