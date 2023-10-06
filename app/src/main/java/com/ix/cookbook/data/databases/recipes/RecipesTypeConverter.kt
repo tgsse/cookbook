@@ -1,8 +1,8 @@
-package com.ix.cookbook.data.databases
+package com.ix.cookbook.data.databases.recipes
 
 import androidx.room.TypeConverter
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.Recipes
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.Recipes
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

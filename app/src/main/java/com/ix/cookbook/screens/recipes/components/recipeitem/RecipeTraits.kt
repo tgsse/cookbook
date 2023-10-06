@@ -14,8 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.dummyRecipe
 import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing

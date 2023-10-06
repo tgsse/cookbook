@@ -1,5 +1,6 @@
 package com.ix.cookbook.data.di
 
+import com.ix.cookbook.data.services.JokeService
 import com.ix.cookbook.data.services.RecipesService
 import com.ix.cookbook.util.Constants.Companion.baseUrl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -57,7 +58,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): RecipesService {
+    fun provideRecipesApiService(retrofit: Retrofit): RecipesService {
         return retrofit.create(RecipesService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideJokeApiService(retrofit: Retrofit): JokeService {
+        return retrofit.create(JokeService::class.java)
     }
 }

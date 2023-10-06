@@ -1,7 +1,7 @@
 package com.ix.cookbook.data.repositories
 
-import com.ix.cookbook.data.datasources.RecipesLocalDataSource
-import com.ix.cookbook.data.datasources.RecipesRemoteDataSource
+import com.ix.cookbook.data.datasources.recipes.RecipesLocalDataSource
+import com.ix.cookbook.data.datasources.recipes.RecipesRemoteDataSource
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 

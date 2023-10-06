@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ix.cookbook.R
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.dummyRecipe
 import com.ix.cookbook.screens.recipes.components.recipeitem.RecipeLikes
 import com.ix.cookbook.screens.recipes.components.recipeitem.RecipeMinutes
 import com.ix.cookbook.screens.recipes.components.recipeitem.RecipeTraits

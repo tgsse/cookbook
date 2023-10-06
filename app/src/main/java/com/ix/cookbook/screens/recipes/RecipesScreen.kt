@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -43,7 +42,7 @@ import com.ix.cookbook.data.requestUtil.filters.DietTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.Filter
 import com.ix.cookbook.data.requestUtil.filters.MealTypeFilter
 import com.ix.cookbook.data.requestUtil.filters.QueryFilter
-import com.ix.cookbook.screens.recipes.components.NoRecipes
+import com.ix.cookbook.screens.recipes.components.ErrorView
 import com.ix.cookbook.screens.recipes.components.RecipeList
 import com.ix.cookbook.screens.recipes.components.RecipeListPlaceholder
 import com.ix.cookbook.screens.recipes.components.RecipesTopBar
@@ -60,7 +59,7 @@ fun RecipesScreen(
     navigateToDetails: () -> Unit,
     viewModel: RecipesViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
+    val screenContentDescription = stringResource(id = R.string.content_desc_recipes_screen)
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -174,8 +173,7 @@ fun RecipesScreen(
                 .padding(innerPadding)
                 .padding(top = 0.dp)
                 .semantics {
-                    contentDescription =
-                        context.getString(R.string.content_desc_recipes_screen)
+                    contentDescription = screenContentDescription
                 },
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -190,7 +188,7 @@ fun RecipesScreen(
                 if (state.isLoading) {
                     RecipeListPlaceholder()
                 } else if (state.recipes.items.isEmpty()) {
-                    NoRecipes(reason = stringResource(R.string.error_recipes_not_found))
+                    ErrorView(error = stringResource(R.string.error_recipes_not_found))
                 } else {
                     RecipeList(
                         recipes = state.recipes,

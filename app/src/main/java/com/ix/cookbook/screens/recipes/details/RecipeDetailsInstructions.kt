@@ -24,9 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ix.cookbook.R
-import com.ix.cookbook.data.models.AnalyzedInstruction
-import com.ix.cookbook.data.models.Step
-import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.data.models.recipes.AnalyzedInstruction
+import com.ix.cookbook.data.models.recipes.Step
+import com.ix.cookbook.data.models.recipes.dummyRecipe
 import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing

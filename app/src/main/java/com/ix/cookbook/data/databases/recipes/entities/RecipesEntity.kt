@@ -1,9 +1,9 @@
-package com.ix.cookbook.data.databases.entities
+package com.ix.cookbook.data.databases.recipes.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ix.cookbook.data.databases.DbUtil.Companion.recipesTable
-import com.ix.cookbook.data.models.Recipes
+import com.ix.cookbook.data.databases.recipes.RecipesDbUtil.Companion.recipesTable
+import com.ix.cookbook.data.models.recipes.Recipes
 
 @Entity(tableName = recipesTable)
 class RecipesEntity(

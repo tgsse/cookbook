@@ -1,6 +1,6 @@
-package com.ix.cookbook.data.datasources
+package com.ix.cookbook.data.datasources.recipes
 
-import com.ix.cookbook.data.models.Recipes
+import com.ix.cookbook.data.models.recipes.Recipes
 import com.ix.cookbook.data.services.RecipesService
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.ix.cookbook.data.models
+package com.ix.cookbook.data.models.recipes
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

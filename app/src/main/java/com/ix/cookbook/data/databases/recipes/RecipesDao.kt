@@ -1,12 +1,12 @@
-package com.ix.cookbook.data.databases
+package com.ix.cookbook.data.databases.recipes
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ix.cookbook.data.databases.entities.FavoriteRecipeEntity
-import com.ix.cookbook.data.databases.entities.RecipesEntity
+import com.ix.cookbook.data.databases.recipes.entities.FavoriteRecipeEntity
+import com.ix.cookbook.data.databases.recipes.entities.RecipesEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

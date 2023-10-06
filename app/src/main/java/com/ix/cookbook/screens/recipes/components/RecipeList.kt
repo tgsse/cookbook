@@ -9,9 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.Recipes
-import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.Recipes
+import com.ix.cookbook.data.models.recipes.dummyRecipe
 import com.ix.cookbook.screens.recipes.components.recipeitem.RecipeItem
 import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing

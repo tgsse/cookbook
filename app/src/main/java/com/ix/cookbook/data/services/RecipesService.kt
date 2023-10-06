@@ -1,6 +1,6 @@
 package com.ix.cookbook.data.services
 
-import com.ix.cookbook.data.models.Recipes
+import com.ix.cookbook.data.models.recipes.Recipes
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 

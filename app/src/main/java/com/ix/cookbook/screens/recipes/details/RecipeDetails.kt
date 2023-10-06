@@ -26,8 +26,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ix.cookbook.R
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.dummyRecipe
 import com.ix.cookbook.ui.components.BackIconButton
 import com.ix.cookbook.ui.components.TopBar
 import com.ix.cookbook.ui.theme.Colors

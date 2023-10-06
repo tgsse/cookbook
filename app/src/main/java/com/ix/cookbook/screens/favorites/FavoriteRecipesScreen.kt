@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -46,7 +45,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.ix.cookbook.R
 import com.ix.cookbook.screens.recipes.RecipesEvent
 import com.ix.cookbook.screens.recipes.RecipesViewModel
-import com.ix.cookbook.screens.recipes.components.NoRecipes
+import com.ix.cookbook.screens.recipes.components.ErrorView
 import com.ix.cookbook.screens.recipes.components.recipeitem.RecipeItem
 import com.ix.cookbook.ui.components.BackIconButton
 import com.ix.cookbook.ui.components.TopBar
@@ -61,7 +60,8 @@ fun FavoriteRecipesScreen(
     viewModel: RecipesViewModel = hiltViewModel(), // TODO separate viewModel might be better
     onNavigateToDetails: () -> Unit,
 ) {
-    val context = LocalContext.current
+    val screenContentDescription =
+        stringResource(id = R.string.content_desc_favorite_recipes_screen)
     val state = viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -137,13 +137,12 @@ fun FavoriteRecipesScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .semantics {
-                    contentDescription =
-                        context.getString(R.string.content_desc_food_joke_screen)
+                    contentDescription = screenContentDescription
                 },
             color = MaterialTheme.colorScheme.background,
         ) {
             if (state.value.favoriteRecipes.isEmpty()) {
-                NoRecipes(reason = stringResource(R.string.error_favorites_empty))
+                ErrorView(error = stringResource(R.string.error_favorites_empty))
             } else {
                 LazyColumn(
                     contentPadding = PaddingValues(all = MaterialTheme.spacing.m),

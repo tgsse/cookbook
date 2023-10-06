@@ -1,10 +1,10 @@
-package com.ix.cookbook.data.databases
+package com.ix.cookbook.data.databases.recipes
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.ix.cookbook.data.databases.entities.FavoriteRecipeEntity
-import com.ix.cookbook.data.databases.entities.RecipesEntity
+import com.ix.cookbook.data.databases.recipes.entities.FavoriteRecipeEntity
+import com.ix.cookbook.data.databases.recipes.entities.RecipesEntity
 
 @Database(
     entities = [

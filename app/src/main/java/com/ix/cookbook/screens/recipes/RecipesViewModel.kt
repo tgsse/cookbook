@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ix.cookbook.R
-import com.ix.cookbook.data.databases.entities.FavoriteRecipeEntity
-import com.ix.cookbook.data.databases.entities.RecipesEntity
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.Recipes
+import com.ix.cookbook.data.databases.recipes.entities.FavoriteRecipeEntity
+import com.ix.cookbook.data.databases.recipes.entities.RecipesEntity
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.Recipes
 import com.ix.cookbook.data.repositories.DataStoreRepository
 import com.ix.cookbook.data.repositories.RecipesRepository
 import com.ix.cookbook.data.requestUtil.RecipesQuery
@@ -47,10 +47,7 @@ sealed class RecipesEvent {
         val queryFilter: QueryFilter? = null,
     ) : RecipesEvent()
 
-    //    data class Search(val searchQuery: String) : RecipesEvent()
-//    object ClearSearch : RecipesEvent()
     data class ClearFilter(val filter: Filter) : RecipesEvent()
-
     data class ViewRecipeDetails(val recipe: Recipe) : RecipesEvent()
     data class Favorite(val recipe: Recipe) : RecipesEvent()
     data class DeleteFavorites(val ids: List<Int>) : RecipesEvent()
@@ -82,8 +79,6 @@ class RecipesViewModel @Inject constructor(
                 event.queryFilter,
             )
 
-//            is RecipesEvent.Search -> fetchRecipesBySearch(event.searchQuery)
-//            is RecipesEvent.ClearSearch -> clearSearch()
             is RecipesEvent.ClearFilter -> clearFilter(event.filter)
             is RecipesEvent.ViewRecipeDetails -> viewRecipeDetails(event.recipe)
             is RecipesEvent.Favorite -> favoriteRecipe(event.recipe)

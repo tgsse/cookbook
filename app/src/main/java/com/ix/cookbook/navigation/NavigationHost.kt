@@ -15,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ix.cookbook.screens.favorites.FavoriteRecipesScreen
-import com.ix.cookbook.screens.joke.FoodJokeScreen
+import com.ix.cookbook.screens.joke.JokeScreen
 import com.ix.cookbook.screens.recipes.RecipesEvent
 import com.ix.cookbook.screens.recipes.RecipesScreen
 import com.ix.cookbook.screens.recipes.RecipesViewModel
@@ -30,7 +30,6 @@ fun NavigationHost(
         startDestination = Routes.Main.route,
         route = Routes.Root.route,
     ) {
-
         fun onNavigateToDetails() {
             navController.navigate(
                 route = Routes.RecipeDetails.route,
@@ -89,7 +88,7 @@ fun BottomTabNavHost(viewModel: RecipesViewModel, onNavigateToDetails: () -> Uni
                     onNavigateToDetails = onNavigateToDetails,
                 )
             }
-            composable(Routes.FoodJoke.route) { FoodJokeScreen() }
+            composable(Routes.FoodJoke.route) { JokeScreen() }
         }
     }
 }

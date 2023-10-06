@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ix.cookbook.R
-import com.ix.cookbook.data.models.Recipe
-import com.ix.cookbook.data.models.dummyRecipe
+import com.ix.cookbook.data.models.recipes.Recipe
+import com.ix.cookbook.data.models.recipes.dummyRecipe
 import com.ix.cookbook.ui.theme.Colors
 import com.ix.cookbook.ui.theme.CookbookTheme
 import com.ix.cookbook.ui.theme.spacing
