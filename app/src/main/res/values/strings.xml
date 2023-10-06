@@ -37,6 +37,7 @@
     <string name="error_while_loading_joke">An error occurred while loading a joke. Please try again later</string>
     <string name="content_desc_stop_selection">Stop selection</string>
     <string name="label_get_new_joke">Get a new joke</string>
+    <string name="content_desc_share_joke">Share joke</string>
 
     <plurals name="label_ingredient_unit">
         <!--
