@@ -1,6 +1,7 @@
 package com.ix.cookbook.ui.theme
 
 import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -15,6 +16,7 @@ private val darkColorScheme = darkColorScheme(
     primary = Colors.purple,
     secondary = Colors.deepPurple,
     tertiary = Colors.lightPurple,
+    onPrimary = Color.White,
 )
 
 private val lightColorScheme = lightColorScheme(
@@ -37,8 +39,7 @@ private val lightColorScheme = lightColorScheme(
 
 @Composable
 fun CookbookTheme(
-//    darkTheme: Boolean = isSystemInDarkTheme(),
-    darkTheme: Boolean = false, // TODO create color palettes
+    darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,

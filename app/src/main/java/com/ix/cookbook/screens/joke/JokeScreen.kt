@@ -33,8 +33,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -111,7 +114,7 @@ fun JokeScreen(
                     IconButton(
                         onClick = {
                             state.joke?.let { shareJoke(it) }
-                        }
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Share,
@@ -139,7 +142,12 @@ fun JokeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
-                    .padding(MaterialTheme.spacing.m),
+                    .padding(MaterialTheme.spacing.m)
+                    .paint(
+                        painterResource(id = R.drawable.bg_food),
+                        contentScale = ContentScale.Crop,
+                        alpha = .1f,
+                    ),
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(
